@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\TopUpController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\TransferController;
 use App\Http\Controllers\Api\TransferHistoryController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\WebhookController;
 
 /*
@@ -33,10 +35,12 @@ use App\Http\Controllers\Api\WebhookController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/check_email', [UserController::class, 'isEmailExist']);
 
 Route::post('webhooks', [WebhookController::class, 'update']);
 
 Route::group(['middleware' => 'jwt.verify'], function ($router) {
+    Route::post('logout', [AuthController::class, 'logout']);
     Route::post('top_ups', [TopUpController::class, 'store']);
     Route::post('transfers', [TransferController::class, 'store']);
     Route::post('data_plans', [DataPlanController::class, 'store']);
@@ -44,4 +48,9 @@ Route::group(['middleware' => 'jwt.verify'], function ($router) {
     Route::get('payment_methods', [PaymentMethodController::class, 'index']);
     Route::get('transfer_histories', [TransferHistoryController::class, 'index']);
     Route::get('transactions', [TransactionController::class, 'index']);
+    Route::get('users', [UserController::class, 'show']);
+    Route::get('users/{username}', [UserController::class, 'getUserByUsername']);
+    Route::put('users', [UserController::class, 'update']);
+    Route::get('wallets', [WalletController::class, 'show']);
+    Route::put('wallets', [WalletController::class, 'update']);
 });
